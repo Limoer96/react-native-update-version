@@ -1,20 +1,63 @@
-# react-native-update-version
-update react-native app on android
+# rn-update-version
+
+Download and update react-native app on android, customize your own UI.
+
 ## Installation
 
 ```sh
-npm install react-native-update-version
+npm install rn-update-version
+# or
+yarn add rn-update-version
 ```
 
 ## Usage
 
-```js
-import { multiply } from "react-native-update-version";
+```tsx
+import UpdateVersion from 'rn-update-version';
 
 // ...
-
-const result = await multiply(3, 7);
+const [percent, setPercent] = React.useState(0);
+const [errorMessage, setErrorMessage] = React.useState('');
+UpdateVersion.update({ url: MOCK_URL });
+UpdateVersion.cancel();
+useEffect(() => {
+  const remove = UpdateVersion.listen(
+    (payload) => {
+      setPercent(payload.percent);
+    },
+    (info) => {
+      setErrorMessage(info.message!);
+    }
+  );
+  return remove;
+}, []);
 ```
+
+> or use `useUpdateVersion` hook
+
+```tsx
+import { useUpdateVersion } from 'rn-update-version';
+// ...
+const { update, cancel, progress, errorMsg } = useUpdateVersion();
+```
+
+## API
+
+### update(config: UpdateConfig)
+
+> Start update action, donwload and install app.
+
+### cancel
+
+> Cancel the update process.
+
+### listen(onProgress: (payload: ProgressPayload) => void,onError?: (payload: ErrorPayload) => void)
+
+> Event listeners during the update process.
+
+### useUpdateVersion
+
+> React hooks for the update process.
 
 ## Contributing
 

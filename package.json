@@ -1,5 +1,5 @@
 {
-  "name": "react-native-update-version",
+  "name": "rn-update-version",
   "version": "0.1.0",
   "description": "test",
   "main": "lib/commonjs/index",

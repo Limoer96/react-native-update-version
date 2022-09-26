@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { StyleSheet, View, Text, Button } from 'react-native';
-import UpdateVersion from 'react-native-update-version';
+import UpdateVersion from 'rn-update-version';
 
 const MOCK_URL =
   'https://file-007.obs.cn-southwest-2.myhuaweicloud.com/software/apk/starbridge-peach-v.1.13.0.apk';
@@ -10,7 +10,6 @@ export default function App() {
   const [percent, setPercent] = React.useState(0);
   const [errorMessage, setErrorMessage] = React.useState('');
   function handleUpdate() {
-    console.log('run this!!!');
     UpdateVersion.update({ url: MOCK_URL });
   }
   function handleCancel() {

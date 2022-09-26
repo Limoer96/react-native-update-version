@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "react-native-update-version": ["./src/index"]
+      "rn-update-version": ["./src/index"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
