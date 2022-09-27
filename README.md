@@ -1,6 +1,6 @@
 # rn-update-version
 
-Download and update react-native app on android, customize your own UI.
+Download and update react-native app on android & iOS, customize your own UI.
 
 ## Installation
 
@@ -18,8 +18,13 @@ import UpdateVersion from 'rn-update-version';
 // ...
 const [percent, setPercent] = React.useState(0);
 const [errorMessage, setErrorMessage] = React.useState('');
+// for Android
 UpdateVersion.update({ url: MOCK_URL });
+// for iOS
+UpdateVersion.update({ appleId: '444934666' });
+// android only
 UpdateVersion.cancel();
+// android only
 useEffect(() => {
   const remove = UpdateVersion.listen(
     (payload) => {

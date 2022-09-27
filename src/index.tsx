@@ -7,9 +7,12 @@ const LINKING_ERROR =
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo managed workflow\n';
 
-interface UpdateConfig {
-  url: string;
+const isIOS = Platform.OS === 'ios';
+
+export interface UpdateConfig {
+  url?: string;
   apkName?: string;
+  appleId?: string;
 }
 
 interface ProgressPayload {
@@ -48,7 +51,18 @@ interface UpdateVersionType {
   ) => () => void;
 }
 
-const UpdateVersion: UpdateVersionType = NativeModules.UpdateVersion
+interface NativeUpdateVersionType extends Omit<UpdateVersionType, ''> {
+  /**
+   * 启动应用更新（下载apk并安装）
+   */
+  update: (config: Omit<UpdateConfig, 'appleId'>) => void;
+  /**
+   * ios更新（跳转到应用商店）
+   */
+  updateIOS: (config: Pick<UpdateConfig, 'appleId'>) => void;
+}
+
+const UpdateVersionNative: NativeUpdateVersionType = NativeModules.UpdateVersion
   ? NativeModules.UpdateVersion
   : new Proxy(
       {},
@@ -59,21 +73,36 @@ const UpdateVersion: UpdateVersionType = NativeModules.UpdateVersion
       }
     );
 
-UpdateVersion.listen = (onProgress, onError) => {
-  const eventEmitter = new NativeEventEmitter(NativeModules.UpdateVersion);
-  const progressChangeEvent = eventEmitter.addListener(
-    'downloadProgress',
-    (payload) => {
-      onProgress(payload);
+const UpdateVersion: UpdateVersionType = {
+  cancel: () => {
+    if (isIOS) {
+      return;
     }
-  );
-  const errorEvent = eventEmitter.addListener('error', (payload) => {
-    onError?.(payload);
-  });
-  return () => {
-    progressChangeEvent.remove();
-    errorEvent.remove();
-  };
+    UpdateVersionNative.cancel();
+  },
+  listen: (onProgress, onError) => {
+    const eventEmitter = new NativeEventEmitter(NativeModules.UpdateVersion);
+    const progressChangeEvent = eventEmitter.addListener(
+      'downloadProgress',
+      (payload) => {
+        onProgress(payload);
+      }
+    );
+    const errorEvent = eventEmitter.addListener('error', (payload) => {
+      onError?.(payload);
+    });
+    return () => {
+      progressChangeEvent.remove();
+      errorEvent.remove();
+    };
+  },
+  update: (config) => {
+    if (config.appleId) {
+      UpdateVersionNative.updateIOS({ appleId: config.appleId });
+    } else {
+      UpdateVersionNative.update({ url: config.url, apkName: config.apkName });
+    }
+  },
 };
 
 /**
