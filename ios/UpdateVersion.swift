@@ -7,17 +7,22 @@ class UpdateVersion: NSObject {
         if appleId == "" {
             return
         }
-        let str = "itms-apps://itunes.apple.com/app/id\(appleId)"
+        let str = "itms-apps://itunes.apple.com/app/id\(appleId!)"
+        print("str\(str)")
         guard let url = URL(string: str) else { return }
-        let can = UIApplication.shared.canOpenURL(url)
-        if can {
-            if #available(iOS 10.0, *) {
-                UIApplication.shared.open(url, options: [:]) { (b) in
-                    print("打开结果: \(b)")
+        DispatchQueue.main.async {
+            let can = UIApplication.shared.canOpenURL(url)
+            if can {
+                if #available(iOS 10.0, *) {
+                    UIApplication.shared.open(url, options: [:]) { (b) in
+                        print("打开结果: \(b)")
+                    }
+                } else {
+                    //iOS 10 以前
+                    UIApplication.shared.openURL(url)
                 }
             } else {
-                //iOS 10 以前
-                UIApplication.shared.openURL(url)
+                
             }
         }
     }
