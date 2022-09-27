@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { StyleSheet, View, Text, Button } from 'react-native';
+import { StyleSheet, View, Text, Button, Platform } from 'react-native';
 import UpdateVersion from 'rn-update-version';
 
 const MOCK_URL =
@@ -10,7 +10,11 @@ export default function App() {
   const [percent, setPercent] = React.useState(0);
   const [errorMessage, setErrorMessage] = React.useState('');
   function handleUpdate() {
-    UpdateVersion.update({ url: MOCK_URL });
+    if (Platform.OS === 'ios') {
+      UpdateVersion.update({ appleId: '444934666' });
+    } else {
+      UpdateVersion.update({ url: MOCK_URL });
+    }
   }
   function handleCancel() {
     UpdateVersion.cancel();
