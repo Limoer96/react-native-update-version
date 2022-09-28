@@ -8,7 +8,6 @@ class UpdateVersion: NSObject {
             return
         }
         let str = "itms-apps://itunes.apple.com/app/id\(appleId!)"
-        print("str\(str)")
         guard let url = URL(string: str) else { return }
         DispatchQueue.main.async {
             let can = UIApplication.shared.canOpenURL(url)

@@ -10,6 +10,10 @@ npm install rn-update-version
 yarn add rn-update-version
 ```
 
+### Setup
+
+> In Xcode `info.plist` add `LSApplicationQueriesSchemes` and set value as array type included `itms-apps` to open `AppStore`.
+
 ## Usage
 
 ```tsx
