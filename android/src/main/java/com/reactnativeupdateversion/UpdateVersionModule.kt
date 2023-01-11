@@ -1,5 +1,4 @@
 package com.reactnativeupdateversion
-import android.util.Log
 import com.azhon.appupdate.listener.OnDownloadListenerAdapter
 import com.azhon.appupdate.manager.DownloadManager
 import com.facebook.react.bridge.*
@@ -24,6 +23,7 @@ class UpdateVersionModule(reactContext: ReactApplicationContext) : ReactContextB
         }
         apkUrl(url)
         apkName(apkName)
+        showNotification(false)
         smallIcon(R.mipmap.ic_launcher)
         onDownloadListener(listenerAdapter)
         build()
@@ -66,6 +66,16 @@ class UpdateVersionModule(reactContext: ReactApplicationContext) : ReactContextB
         val data = Arguments.createMap()
         data.putString("message", e.message)
         sendEvent(reactContext, "error", data)
+      }
+
+      override fun start() {
+        super.start()
+        sendEvent(reactContext, "start", null)
+      }
+
+      override fun cancel() {
+        super.cancel()
+        sendEvent(reactContext, "cancel", null)
       }
     }
     }
